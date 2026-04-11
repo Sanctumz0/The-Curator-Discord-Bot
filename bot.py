@@ -210,10 +210,6 @@ class AnswerView(discord.ui.View):
         state[answer] += weight
         state["q"] += 1
     
-        for item in self.children:
-            item.disabled = True
-        await interaction.message.edit(view=self)
-    
         if state["q"] >= len(QUESTIONS):
             winner = determine_winner(state)
             result = RESULTS[winner]
