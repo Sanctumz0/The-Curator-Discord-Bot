@@ -201,11 +201,8 @@ class AnswerView(discord.ui.View):
         state = quiz_state[user_id]
     
         if state["q"] != self.q_index:
-            await interaction.followup.send(
-                "Please answer the current question.",
-                ephemeral=True
-            )
-            return
+    # silently ignore — stale button from a previous question
+    return
     
         q = QUESTIONS[self.q_index]
         weight = q["weight"]
