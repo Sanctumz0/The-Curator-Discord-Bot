@@ -187,63 +187,64 @@ class AnswerView(discord.ui.View):
         self.q_index = q_index
 
     async def handle_answer(self, interaction: discord.Interaction, answer: str):
-        user_id = interaction.user.id
+    await interaction.response.defer(ephemeral=True)
+    
+    user_id = interaction.user.id
 
-        if user_id not in quiz_state:
-            await interaction.response.send_message(
-                "Your session expired. Run `/sort` to start again.",
-                ephemeral=True
-            )
-            return
+    if user_id not in quiz_state:
+        await interaction.followup.send(
+            "Your session expired. Run `/sort` to start again.",
+            ephemeral=True
+        )
+        return
 
-        state = quiz_state[user_id]
+    state = quiz_state[user_id]
 
-        if state["q"] != self.q_index:
-            await interaction.response.send_message(
-                "Please answer the current question.",
-                ephemeral=True
-            )
-            return
+    if state["q"] != self.q_index:
+        await interaction.followup.send(
+            "Please answer the current question.",
+            ephemeral=True
+        )
+        return
 
-        q = QUESTIONS[self.q_index]
-        weight = q["weight"]
+    q = QUESTIONS[self.q_index]
+    weight = q["weight"]
 
-        state[answer] += weight
-        state["q"] += 1
+    state[answer] += weight
+    state["q"] += 1
 
-        for item in self.children:
-            item.disabled = True
-        await interaction.message.edit(view=self)
+    for item in self.children:
+        item.disabled = True
+    await interaction.message.edit(view=self)
 
-        if state["q"] >= len(QUESTIONS):
-            # Final answer — determine result
-            winner = determine_winner(state)
-            result = RESULTS[winner]
+    if state["q"] >= len(QUESTIONS):
+        winner = determine_winner(state)
+        result = RESULTS[winner]
 
-            embed = discord.Embed(
-                title=result["title"],
-                description=f"Welcome home, {interaction.user.mention}.\n\n{result['description']}",
-                color=result["color"]
-            )
-            embed.set_footer(text=result["footer"])
+        embed = discord.Embed(
+            title=result["title"],
+            description=f"Welcome home, {interaction.user.mention}.\n\n{result['description']}",
+            color=result["color"]
+        )
+        embed.set_footer(text=result["footer"])
 
-            guild = interaction.guild
-            role = guild.get_role(result["role_id"])
-            unsorted_role = guild.get_role(ROLE_UNSORTED)
+        guild = interaction.guild
+        role = guild.get_role(result["role_id"])
+        unsorted_role = guild.get_role(ROLE_UNSORTED)
 
-            if role:
-                await interaction.user.add_roles(role)
-            if unsorted_role:
-                await interaction.user.remove_roles(unsorted_role)
+        if role:
+            await interaction.user.add_roles(role)
+        if unsorted_role:
+            await interaction.user.remove_roles(unsorted_role)
 
-            del quiz_state[user_id]
+        del quiz_state[user_id]
 
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-        else:
-            next_q_index = state["q"]
-            embed = build_question_embed(next_q_index)
-            view = build_answer_buttons(next_q_index)
-            await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+        await interaction.followup.send(embed=embed, ephemeral=True)
+    else:
+        next_q_index = state["q"]
+        embed = build_question_embed(next_q_index)
+        view = build_answer_buttons(next_q_index)
+        await interaction.followup.send(embed=embed, view=view, ephemeral=True)
 
     @discord.ui.button(label="A", style=discord.ButtonStyle.secondary)
     async def button_a(self, interaction: discord.Interaction, button: discord.ui.Button):
