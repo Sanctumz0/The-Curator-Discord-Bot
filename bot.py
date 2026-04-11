@@ -202,7 +202,7 @@ class AnswerView(discord.ui.View):
     
         if state["q"] != self.q_index:
     # silently ignore — stale button from a previous question
-        return
+            return
     
         q = QUESTIONS[self.q_index]
         weight = q["weight"]
