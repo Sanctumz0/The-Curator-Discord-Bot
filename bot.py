@@ -21,7 +21,7 @@ QUESTIONS = [
         "a": "Sitting alone, really taking in *are you okay?* — thinking about your life",
         "b": "Feeling fired up listening to *Objection* — like you need to go do something bigger",
         "c": "Playing *bow chi wa wa* on a drive, just enjoying the moment",
-        "d": "Listening to *miss neighbour* and thinking about someone specific",
+        "d": "Listening to *The Conflict In My Mind* and absorbing the lyrics",
         "weight": 8
     },
     {
@@ -30,7 +30,7 @@ QUESTIONS = [
         "a": "are you okay?",
         "b": "Objection",
         "c": "bow chi wa wa",
-        "d": "miss neighbour",
+        "d": "The Conflict In My Mind",
         "weight": 8
     },
     {
@@ -98,8 +98,8 @@ QUESTIONS = [
     },
     {
         "title": "Question 10 of 10 — Final Question",
-        "question": "Which space in Xentrico's Playground feels like home to you?",
-        "a": "Quiet streets where you can think",
+        "question": "Which space in Xentrico Hills feels like home to you?",
+        "a": "Quiet area where you can think",
         "b": "Loud, expressive, creative spaces",
         "c": "Calm streets where nothing is rushed",
         "d": "Soft, emotional places tied to memories",
